@@ -1,13 +1,16 @@
+// src/components/Header.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Header.css';
 
 const Header = () => {
   return (
-    <header style={{ padding: '10px', backgroundColor: '#333', color: '#fff', display: 'flex', justifyContent: 'space-between' }}>
-      <h1 style={{ margin: 0 }}>Weather App</h1>
+    <header className="header">
+      <h1 className="app-title">Weather App</h1>
       <nav>
-        <Link to="/" style={{ color: '#fff', marginRight: '15px', textDecoration: 'none' }}>Weather</Link>
-        <Link to="/favorites" style={{ color: '#fff', textDecoration: 'none' }}>Favorites</Link>
+        <Link to="/weather" className="nav-link">Weather</Link>
+        <Link to="/favorites" className="nav-link">Favorites</Link>
       </nav>
     </header>
   );
