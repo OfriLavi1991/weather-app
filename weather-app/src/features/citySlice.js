@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCitySuggestions } from '../api/weatherApi';
+import { fetchCitySuggestions } from '../api/weatherApi';
+import toast from 'react-hot-toast'; // הוספת toast
 
-// thunk שמבצע קריאה ל-API ומביא הצעות לערים לפי חיפוש
 export const fetchCities = createAsyncThunk('cities/fetchCities', async (query) => {
-  const cities = await getCitySuggestions(query);
-  console.log("City suggestions from API:", cities); // הדפסת התוצאות המתקבלות
+  const cities = await fetchCitySuggestions(query);
   return cities;
 });
 
@@ -13,6 +12,7 @@ const citySlice = createSlice({
   initialState: {
     suggestions: [],
     status: 'idle',
+    error: null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -24,8 +24,10 @@ const citySlice = createSlice({
         state.status = 'succeeded';
         state.suggestions = action.payload;
       })
-      .addCase(fetchCities.rejected, (state) => {
+      .addCase(fetchCities.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.error.message;
+        toast.error('Failed to load city suggestions'); // הודעת שגיאה ב-toast
       });
   },
 });

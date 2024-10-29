@@ -1,31 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCurrentWeather, get5DayForecast } from '../api/weatherApi';
+import { fetchCurrentWeather } from '../api/weatherApi';
+import toast from 'react-hot-toast'; // הוספת toast
 
-// פעולה אסינכרונית להבאת מזג האוויר הנוכחי
-export const fetchWeather = createAsyncThunk(
-  'weather/fetchWeather',
-  async (locationKey) => {
-    const data = await getCurrentWeather(locationKey);
-    return data;
-  }
-);
-
-// פעולה אסינכרונית להבאת תחזית ל-5 ימים
-export const fetchForecast = createAsyncThunk(
-  'weather/fetchForecast',
-  async (locationKey) => {
-    const data = await get5DayForecast(locationKey);
-    return data;
-  }
-);
+export const fetchWeather = createAsyncThunk('weather/fetchWeather', async (locationKey) => {
+  const weather = await fetchCurrentWeather(locationKey);
+  return weather;
+});
 
 const currentWeatherSlice = createSlice({
   name: 'currentWeather',
   initialState: {
     data: null,
-    forecast: [],
     status: 'idle',
-    error: null,
+    error: null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -40,17 +27,7 @@ const currentWeatherSlice = createSlice({
       .addCase(fetchWeather.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-      })
-      .addCase(fetchForecast.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchForecast.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.forecast = action.payload;
-      })
-      .addCase(fetchForecast.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+        toast.error('Failed to load current weather'); // הודעת שגיאה ב-toast
       });
   },
 });

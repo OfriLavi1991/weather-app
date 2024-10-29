@@ -1,10 +1,9 @@
-// src/features/forecastSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { get5DayForecast } from '../api/weatherApi';
+import { fetchFiveDayForecast } from '../api/weatherApi';
+import toast from 'react-hot-toast'; // הוספת toast
 
-// יצירת async thunk לשליפת תחזית ל-5 ימים
 export const fetchForecast = createAsyncThunk('forecast/fetchForecast', async (locationKey) => {
-  const forecast = await get5DayForecast(locationKey);
+  const forecast = await fetchFiveDayForecast(locationKey);
   return forecast;
 });
 
@@ -28,6 +27,7 @@ const forecastSlice = createSlice({
       .addCase(fetchForecast.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+        toast.error('Failed to load 5-day forecast'); // הודעת שגיאה ב-toast
       });
   },
 });
