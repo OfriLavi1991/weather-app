@@ -9,7 +9,7 @@ const Header = () => {
     <header className="header">
       <h1 className="app-title">Weather App</h1>
       <nav>
-        <Link to="/weather" className="nav-link">Weather</Link>
+        <Link to="/" className="nav-link">Weather</Link>
         <Link to="/favorites" className="nav-link">Favorites</Link>
       </nav>
     </header>

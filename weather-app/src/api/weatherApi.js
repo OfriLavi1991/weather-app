@@ -23,6 +23,7 @@ export const fetchCurrentWeather = async (locationKey) => {
       throw new Error('Failed to fetch current weather');
     }
     const data = await response.json();
+    console.log('data', data);
     return data[0];
   } catch (error) {
     console.error(error);
@@ -44,3 +45,21 @@ export const fetchFiveDayForecast = async (locationKey) => {
     return [];
   }
 };
+
+export const fetchLocationKeyByCoordinates = async (latitude, longitude) => {
+
+  try {
+    const response = await fetch(`${BASE_URL}/locations/v1/cities/geoposition/search?apikey=${API_KEY}&q=${latitude},${longitude}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch location key");
+    }
+
+    const data = await response.json();
+    console.log('data', data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching location key:", error);
+    return null;
+  }
+}

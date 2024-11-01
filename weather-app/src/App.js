@@ -1,19 +1,22 @@
-import React from 'react';
+import * as React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import WeatherPage from './components/WeatherPage';
 import FavoritesPage from './components/FavoritesPage';
+import { Toaster } from 'react-hot-toast';
+
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Header />
+      <Toaster />
       <Routes>
-        <Route path="/weather" element={<WeatherPage />} />
+        <Route path="/:key?" element={<WeatherPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
-export default App;
+export default App; // חשוב: יש לייצא את App כברירת מחדל

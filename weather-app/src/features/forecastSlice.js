@@ -14,7 +14,11 @@ const forecastSlice = createSlice({
     status: 'idle',
     error: null
   },
-  reducers: {},
+  reducers: {
+    resetForecast: (state) => {
+      state.data = [];
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchForecast.pending, (state) => {
@@ -28,8 +32,12 @@ const forecastSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
         toast.error('Failed to load 5-day forecast'); // הודעת שגיאה ב-toast
+      })
+      .addCase('cities/reset', (state) => {
+        state.data = [];
       });
   },
 });
 
+export const { resetForecast } = forecastSlice.actions;
 export default forecastSlice.reducer;

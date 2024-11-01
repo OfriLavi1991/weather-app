@@ -1,52 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import LocationButton from './LocationButton';
+import { useDispatch } from 'react-redux';
+import { fetchCities } from '../features/citySlice';
 
-const SearchBar = ({ query, setQuery, handleSearch, handleCitySelect, cities, getLocationWeather }) => {
-  // פונקציה לבדוק אם השפה היא אנגלית
-  const isEnglish = (text) => /^[A-Za-z\s]*$/.test(text);
+let timeout;
 
-  // קריאה לפונקציית החיפוש כאשר יש טקסט בחיפוש
-  useEffect(() => {
-    if (query) {
-      handleSearch();
+const SearchBar = ({ query, setQuery, setCurrentLocation }) => {
+  const [isEnglishOnly, setIsEnglishOnly] = useState(true);
+  const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    // בדיקה אם הכניסה היא באנגלית
+    const englishRegex = /^[A-Za-z\s]*$/;
+    setIsEnglishOnly(englishRegex.test(value));
+    
+    if (isEnglishOnly) {
+      // מפעילים חיפוש אחרי 2 תווים
+      if (value?.length > 2) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          console.log('fetch cities', query);
+          dispatch(fetchCities(query))
+        }, 700);
+      }
     }
-  }, [query, handleSearch]);
+  };
 
   return (
     <div>
       <input
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Search for a city"
       />
-      <button onClick={handleSearch}>Search</button>
-
-      {/* אזהרה במקרה שהטקסט לא באנגלית */}
-      {!isEnglish(query) && (
-        <div style={{ color: 'red', marginTop: '5px' }}>
-          Search only in English
-        </div>
-      )}
-
-      {/* כפתור "Location" עם חיבור לפונקציה getLocationWeather */}
-      <button onClick={getLocationWeather} style={{ display: 'block', marginTop: '5px' }}>
-        My Location
-      </button>
-
-      {/* הצגת רשימת ערים רק כאשר יש טקסט בשדה החיפוש */}
-      {query && cities.length > 0 && (
-        <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-          {cities.map((city) => (
-            <li
-              key={city.Key}
-              onClick={() => handleCitySelect(city)}
-              style={{ cursor: 'pointer', padding: '5px 0', borderBottom: '1px solid #ccc' }}
-            >
-              {city.LocalizedName}, {city.Country.ID}
-            </li>
-          ))}
-        </ul>
-      )}
+      {query?.length > 0 && !isEnglishOnly && 
+        <p style={{ color: 'red' }}>Search only in English</p>
+      }
+      <div><LocationButton setCurrentLocation={setCurrentLocation} /></div>
     </div>
   );
 };

@@ -14,7 +14,11 @@ const citySlice = createSlice({
     status: 'idle',
     error: null
   },
-  reducers: {},
+  reducers: {
+    resetCities: (state) => {
+      state.suggestions = [];
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCities.pending, (state) => {
@@ -32,4 +36,5 @@ const citySlice = createSlice({
   },
 });
 
+export const { resetCities } = citySlice.actions;
 export default citySlice.reducer;

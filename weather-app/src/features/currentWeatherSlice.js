@@ -14,7 +14,11 @@ const currentWeatherSlice = createSlice({
     status: 'idle',
     error: null
   },
-  reducers: {},
+  reducers: {
+    resetCurrentWeather: (state) => {
+      state.data = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchWeather.pending, (state) => {
@@ -32,4 +36,5 @@ const currentWeatherSlice = createSlice({
   },
 });
 
+export const { resetCurrentWeather } = currentWeatherSlice.actions;
 export default currentWeatherSlice.reducer;
