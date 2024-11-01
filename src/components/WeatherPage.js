@@ -53,6 +53,7 @@ const WeatherPage = () => {
     dispatch(resetCities());
     setQuery(city.LocalizedName);
     setCurrentLocation(city);
+    window.history.replaceState({}, '', `/`);
   };
 
   const handleToggleFavorite = () => {

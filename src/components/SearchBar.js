@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LocationButton from './LocationButton';
 import { useDispatch } from 'react-redux';
 import { fetchCities } from '../features/citySlice';
+import { GoAlertFill } from "react-icons/go";
 
 let timeout;
 
@@ -37,7 +38,7 @@ const SearchBar = ({ query, setQuery, setCurrentLocation }) => {
         placeholder="Search for a city"
       />
       {query?.length > 0 && !isEnglishOnly && 
-        <p style={{ color: 'red' }}>Search only in English</p>
+        <p style={{ color: 'red' }}>Search only in English <GoAlertFill /></p>
       }
       <div><LocationButton setCurrentLocation={setCurrentLocation} /></div>
     </div>
