@@ -23,7 +23,6 @@ export const fetchCurrentWeather = async (locationKey) => {
       throw new Error('Failed to fetch current weather');
     }
     const data = await response.json();
-    console.log('data', data);
     return data[0];
   } catch (error) {
     console.error(error);
@@ -55,7 +54,6 @@ export const fetchLocationKeyByCoordinates = async (latitude, longitude) => {
     }
 
     const data = await response.json();
-    console.log('data', data);
 
     return data;
   } catch (error) {

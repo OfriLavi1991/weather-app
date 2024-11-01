@@ -4,28 +4,30 @@ import { fetchCities, resetCities } from '../features/citySlice';
 import { fetchWeather } from '../features/currentWeatherSlice'; // ייבוא fetchWeather בלבד מ-currentWeatherSlice
 import { fetchForecast } from '../features/forecastSlice'; // ייבוא fetchForecast מהקובץ הנכון
 import { addFavorite, removeFavorite } from '../features/favoritesSlice';
+import { changeMetric, metricType } from '../features/selectedMetricSlice';
+import { fahrenheitToCelsius } from '../utils';
 import SearchBar from './SearchBar';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 
 const WeatherPage = () => {
   let { key } = useParams();
-  console.log('key', key);
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
   const cities = useSelector((state) => state.cities.suggestions);
   const weather = useSelector((state) => state.currentWeather.data);
   const forecast = useSelector((state) => state.forecast.data);
   const favorites = useSelector((state) => state.favorites.items);
+  const selectedMetric = useSelector((state) => state.selectedMetric.data);
   const [currentLocation, setCurrentLocation] = useState();
   const [isFavorite, setIsFavorite] = useState(false);
 
-
+  const isMetricDisplay = selectedMetric === metricType;
+  
   useEffect(() => {
     if (weather) {
       setIsFavorite(favorites.some((city) => city.Key === currentLocation?.Key));
     }
-    console.log('favorites', favorites);
   }, [currentLocation, favorites, weather]);
 
   useEffect(() => {
@@ -68,7 +70,6 @@ const WeatherPage = () => {
 
   return (
     <div>
-      <h1>Weather App</h1>
       <SearchBar 
         query={query}
         setQuery={setQuery}
@@ -82,7 +83,7 @@ const WeatherPage = () => {
         <div>
           <h2>{currentLocation?.AdministrativeArea?.CountryID} {currentLocation?.LocalizedName}</h2>
           <p>{weather.WeatherText}</p>
-          <p>Temperature: {weather.Temperature.Metric.Value} °C</p>
+          <p>Temperature: {isMetricDisplay ? weather.Temperature.Metric.Value : weather.Temperature.Imperial.Value} <button onClick={() => dispatch(changeMetric())}>{isMetricDisplay ? '°C' : '°F'}</button></p>
         </div>
       )}
       {cities.length > 0 && (
@@ -100,7 +101,7 @@ const WeatherPage = () => {
           <ul>
             {forecast.map((day, index) => (
               <li key={index}>
-                {day.Date}: {day.Temperature.Minimum.Value}°C - {day.Temperature.Maximum.Value}°C
+                {day.Date}: {isMetricDisplay ? `${fahrenheitToCelsius(day.Temperature.Minimum.Value)}°C` : `${day.Temperature.Minimum.Value}°F`} - {isMetricDisplay ? `${fahrenheitToCelsius(day.Temperature.Maximum.Value)}°C` : `${day.Temperature.Maximum.Value}°F`}
               </li>
             ))}
           </ul>

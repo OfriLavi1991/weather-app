@@ -22,7 +22,6 @@ const SearchBar = ({ query, setQuery, setCurrentLocation }) => {
       if (value?.length > 2) {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-          console.log('fetch cities', query);
           dispatch(fetchCities(query))
         }, 700);
       }

@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeFavorite } from '../features/favoritesSlice';
 import { fetchCurrentWeather } from '../api/weatherApi';
 import { Link } from 'react-router-dom';
+import { metricType } from '../features/selectedMetricSlice';
 
 const FavoritesPage = () => {
   const favorites = useSelector((state) => state.favorites.items);
+  const selectedMetric = useSelector((state) => state.selectedMetric.data);
   const [citiesWeather, setCitiesWeather] = React.useState({});
   const dispatch = useDispatch();
 
@@ -16,7 +18,6 @@ const FavoritesPage = () => {
   useEffect(() => {
       favorites.map((city) => fetchCurrentWeather(city.Key)
         .then((data) => {
-          console.log('fetched data');
           setCitiesWeather((state) => ({...state, [city.Key]: data}));
         }));
   }, [favorites]);
@@ -32,7 +33,7 @@ const FavoritesPage = () => {
               {citiesWeather[city.Key] && 
                 <div>
                   <p>{citiesWeather[city.Key].WeatherText}</p>
-                  <p>Temperature: {citiesWeather[city.Key].Temperature.Metric.Value} °C</p>
+                  <p>Temperature: {selectedMetric === metricType ? citiesWeather[city.Key].Temperature.Metric.Value : citiesWeather[city.Key].Temperature.Imperial.Value} {selectedMetric === metricType ? '°C' : '°F'}</p>
                 </div>
               }
               <button onClick={() => handleRemove(city)}>Remove</button>
