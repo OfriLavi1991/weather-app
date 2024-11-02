@@ -9,18 +9,21 @@ import { fahrenheitToCelsius } from '../utils';
 import SearchBar from './SearchBar';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
+import { changeCurrentLocation } from '../features/currentLocationSlice';
 
 const WeatherPage = () => {
-  let { key } = useParams();
-  const dispatch = useDispatch();
-  const [query, setQuery] = useState('');
   const cities = useSelector((state) => state.cities.suggestions);
   const weather = useSelector((state) => state.currentWeather.data);
   const forecast = useSelector((state) => state.forecast.data);
   const favorites = useSelector((state) => state.favorites.items);
   const selectedMetric = useSelector((state) => state.selectedMetric.data);
-  const [currentLocation, setCurrentLocation] = useState();
+  const currentLocation = useSelector((state) => state.currentLocation.data);
+  
+  const [query, setQuery] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
+
+  let { key } = useParams();
+  const dispatch = useDispatch();
 
   const isMetricDisplay = selectedMetric === metricType;
   
@@ -37,7 +40,7 @@ const WeatherPage = () => {
         dispatch(fetchWeather(key));
         dispatch(fetchForecast(key));
         setQuery(location.LocalizedName);
-        setCurrentLocation(location);
+        dispatch(changeCurrentLocation(location));
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,8 +55,7 @@ const WeatherPage = () => {
     dispatch(fetchForecast(city.Key));
     dispatch(resetCities());
     setQuery(city.LocalizedName);
-    setCurrentLocation(city);
-    window.history.replaceState({}, '', `/`);
+    dispatch(changeCurrentLocation(city));
   };
 
   const handleToggleFavorite = () => {
@@ -75,7 +77,6 @@ const WeatherPage = () => {
         query={query}
         setQuery={setQuery}
         handleSearch={handleSearch}
-        setCurrentLocation={setCurrentLocation}
       />
       <button onClick={handleToggleFavorite}>
         {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}

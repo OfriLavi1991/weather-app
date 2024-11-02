@@ -4,10 +4,11 @@ import { fetchWeather, resetCurrentWeather } from '../features/currentWeatherSli
 import { fetchForecast } from '../features/forecastSlice';
 import { resetCities } from '../features/citySlice';
 import { resetForecast } from '../features/forecastSlice';
+import { changeCurrentLocation } from '../features/currentLocationSlice';
 import { fetchLocationKeyByCoordinates } from '../api/weatherApi';
 import toast from 'react-hot-toast';
 
-const LocationButton = ({ setCurrentLocation }) => {
+const LocationButton = () => {
   const dispatch = useDispatch();
 
   const handleLocationClick = () => {
@@ -29,7 +30,7 @@ const LocationButton = ({ setCurrentLocation }) => {
             // Dispatch actions to fetch weather and forecast based on location key
             await dispatch(fetchWeather(locationData.Key)).unwrap();
             await dispatch(fetchForecast(locationData.Key)).unwrap();
-            setCurrentLocation(locationData);
+            dispatch(changeCurrentLocation(locationData));
             toast.success('Weather data for current location loaded');
           } catch (error) {
             console.error("Failed to fetch weather for location:", error);

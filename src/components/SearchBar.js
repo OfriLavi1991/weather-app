@@ -6,7 +6,7 @@ import { GoAlertFill } from "react-icons/go";
 
 let timeout;
 
-const SearchBar = ({ query, setQuery, setCurrentLocation }) => {
+const SearchBar = ({ query, setQuery }) => {
   const [isEnglishOnly, setIsEnglishOnly] = useState(true);
   const dispatch = useDispatch();
 
@@ -40,7 +40,7 @@ const SearchBar = ({ query, setQuery, setCurrentLocation }) => {
       {query?.length > 0 && !isEnglishOnly && 
         <p style={{ color: 'red' }}>Search only in English <GoAlertFill /></p>
       }
-      <div><LocationButton setCurrentLocation={setCurrentLocation} /></div>
+      <div><LocationButton /></div>
     </div>
   );
 };

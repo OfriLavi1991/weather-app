@@ -4,6 +4,7 @@ import currentWeatherReducer from './features/currentWeatherSlice';
 import forecastReducer from './features/forecastSlice';
 import favoritesReducer from './features/favoritesSlice';
 import selectedMetricReducer from './features/selectedMetricSlice';
+import currentLocationReducer from './features/currentLocationSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     forecast: forecastReducer,
     favorites: favoritesReducer,
     selectedMetric: selectedMetricReducer,
+    currentLocation: currentLocationReducer,
   },
 });
 
