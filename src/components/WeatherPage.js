@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { changeCurrentLocation } from '../features/currentLocationSlice';
 
 const WeatherPage = () => {
+  const dispatch = useDispatch();
   const cities = useSelector((state) => state.cities.suggestions);
   const weather = useSelector((state) => state.currentWeather.data);
   const forecast = useSelector((state) => state.forecast.data);
@@ -23,8 +24,6 @@ const WeatherPage = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   let { key } = useParams();
-  const dispatch = useDispatch();
-
   const isMetricDisplay = selectedMetric === metricType;
   
   useEffect(() => {
@@ -85,7 +84,7 @@ const WeatherPage = () => {
         <div>
           <h2>{currentLocation?.AdministrativeArea?.CountryID} {currentLocation?.LocalizedName}</h2>
           <p>{weather.WeatherText}</p>
-          <p>Temperature: {isMetricDisplay ? weather.Temperature.Metric.Value : weather.Temperature.Imperial.Value} <button onClick={() => dispatch(changeMetric())}>{isMetricDisplay ? '°C' : '°F'}</button></p>
+          <p>Temperature: {isMetricDisplay ? weather.Temperature.Metric.Value : weather.Temperature.Imperial.Value} <button onClick={() => dispatch(changeMetric())}>{selectedMetric}</button></p>
         </div>
       )}
       {cities.length > 0 && (
@@ -103,7 +102,7 @@ const WeatherPage = () => {
           <ul>
             {forecast.map((day, index) => (
               <li key={index}>
-                {day.Date}: {isMetricDisplay ? `${fahrenheitToCelsius(day.Temperature.Minimum.Value)}°C` : `${day.Temperature.Minimum.Value}°F`} - {isMetricDisplay ? `${fahrenheitToCelsius(day.Temperature.Maximum.Value)}°C` : `${day.Temperature.Maximum.Value}°F`}
+                {day.Date}: {isMetricDisplay ? fahrenheitToCelsius(day.Temperature.Minimum.Value) : day.Temperature.Minimum.Value}{selectedMetric} - {isMetricDisplay ? fahrenheitToCelsius(day.Temperature.Maximum.Value) : day.Temperature.Maximum.Value}{selectedMetric}
               </li>
             ))}
           </ul>

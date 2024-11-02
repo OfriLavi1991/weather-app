@@ -33,7 +33,7 @@ const FavoritesPage = () => {
               {citiesWeather[city.Key] && 
                 <div>
                   <p>{citiesWeather[city.Key].WeatherText}</p>
-                  <p>Temperature: {selectedMetric === metricType ? citiesWeather[city.Key].Temperature.Metric.Value : citiesWeather[city.Key].Temperature.Imperial.Value} {selectedMetric === metricType ? '°C' : '°F'}</p>
+                  <p>Temperature: {selectedMetric === metricType ? citiesWeather[city.Key].Temperature.Metric.Value : citiesWeather[city.Key].Temperature.Imperial.Value} {selectedMetric}</p>
                 </div>
               }
               <button onClick={() => handleRemove(city)}>Remove</button>
